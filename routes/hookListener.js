@@ -28,13 +28,17 @@ async function createIncident(incident) {
 router.post('/', function (req, res, next) {
 
     req.body.messages.forEach(message => {
-        const incident = message.incident;
 
+        if (message.event !== 'incident.trigger') {
+            return;
+        }
+
+        const incident = message.incident;
         const requestIncident = {
             incident: {
                 type: 'incident',
                 title: incident.title,
-                incident_key: incident.incident_key
+                incident_key: incident.incident_key,
                 body: {
                     type: 'incident_body',
                     details: incident.description
